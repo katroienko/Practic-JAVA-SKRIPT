@@ -1,0 +1,10 @@
+/* sass src/styles.sass dist/style.css */
+body {
+  font-family: "Arial", sans-serif;
+  color: #3948db;
+}
+body header {
+  background-color: #2eec71;
+}
+
+/*# sourceMappingURL=style.css.map */
