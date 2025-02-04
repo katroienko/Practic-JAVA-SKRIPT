@@ -6,8 +6,8 @@
 // это свойства, которые принимают цветовые значения
 // rgba через CSS.
 
- canvas = document.getElementById("canvas");
- ctx = canvas.getContext("2d"); // Получаем контекст 2D рисования
+ canvas 111111111111111 = document.getElementById("canvas");
+ ctx 111111111111111= canvas.getContext("2d"); // Получаем контекст 2D рисования
 
 
 ctx.strokeStyle = "rgba(255,0,0,0.5)";
