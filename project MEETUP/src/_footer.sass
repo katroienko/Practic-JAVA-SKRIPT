@@ -1,0 +1,99 @@
+
+@use 'reset'
+
+@use 'mixins'
+
+@use 'variables'
+footer
+    background: #212121
+    color: variables.$primary-color-1
+    
+// футер первая строка
+
+.footer_top
+    @include mixins.flex-mix-ali-center
+    padding: 25px 0
+    border-bottom: 1px solid variables.$primary-color-3
+
+    p
+        font-size: 16px
+        font-weight: 600
+
+
+// кнопка
+.btn_get_start
+    @include mixins.flex-mix
+    font-size: 16px
+    margin-left: 37px
+    color: variables.$primary-color-1
+    border-radius: 6px
+    padding: 10px 14px
+    border: 2px solid variables.$primary-color-1
+    font-weight: 600
+
+
+// футер основной контент
+.footer_content
+    margin: 24px 0
+    display: flex
+
+//  колонка для меню в футере
+.foo_col
+    width: 33.33%
+    padding-right: 5px
+
+    // меню футер
+.foo_menu
+    @include mixins.flex-mix-col
+    gap: 7px
+    li
+        a
+            font-weight: 400
+            font-size: 14px
+            line-height: 143%
+            color: #c5c4c4
+
+// футер строка с соц сетями
+.footer_line
+    margin: 24px 0
+    @include mixins.flex-mix-2
+    
+    &__sc2
+        display: flex
+        gap: 12px
+
+
+// футер соцсети
+.footer_soc
+    display: flex
+    gap: 32px
+    
+    li
+        a
+            display: flex
+            transform: scale(1)
+            transition: 0.3s
+
+            &:hover
+                transform: scale(1.2)
+
+
+
+// футер самая последняя строка
+.footer_bottom
+    margin-top: 2px
+    padding-bottom: 40px
+    @include mixins.flex-mix-ali-center
+    gap: 24px
+
+    &__links
+        display: flex
+        gap: 23px
+        a
+            font-weight: 400
+            font-size: 14px
+            line-height: 143%
+            color: #c5c4c4
+
+
+

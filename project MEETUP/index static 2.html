@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label,
+        select,
+        input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .event {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .event img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .event:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Filter Events</h2>
+        <label for="dateFrom">Date From:</label>
+        <input type="date" id="dateFrom">
+
+        <label for="dateTo">Date To:</label>
+        <input type="date" id="dateTo">
+
+        <label for="type">Type:</label>
+        <select id="type">
+            <option value="">Any</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+        </select>
+
+        <label for="distance">Distance:</label>
+        <input type="number" id="distance" placeholder="Max distance in km">
+
+
+        <label for="category">Category:</label>
+        <select id="category">
+            <option value="">Any</option>
+            <option value="Technology">Technology</option>
+            <option value="Hobbies and Passions">Hobbies and Passions</option>
+            <option value="Business">Business</option>
+            <option value="Social Activities">Social Activities</option>
+            <option value="Health and Wellbeing">Health and Wellbeing</option>
+        </select>
+
+        <button onclick="applyFilters()">Apply Filters</button>
+        <div id="eventList"></div>
+    </div>
+
+    <script>
+        const eventsStore = [
+            {
+                title: "IT career HUB Front-end 69: Project presentation and feedback",
+                description: "281024-wdm & Students Community",
+                date: new Date(2025, 2, 14, 10),
+                image: "img/events/itcareerHub.jpg",
+                type: "online",
+                attendees: 26,
+                category: "Web Development",
+                distance: 600,
+            },
+            {
+                title: "INFJ Personality Type - Coffee Shop Meet & Greet",
+                description: "Being an INFJ",
+                date: new Date(2025, 2, 23, 15),
+                image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1037&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "offline",
+                attendees: 99,
+                category: "Hobbies and Passions",
+                distance: 50,
+            },
+
+            {
+                title: "NYC AI Users - AI Tech Talks, Demo & Social: RAG Search and Customer Experience",
+                description: "New York AI Users",
+                date: new Date(2025, 2, 23, 11, 30),
+                image: "https://images.unsplash.com/photo-1696258686454-60082b2c33e2?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "offline",
+                attendees: 43,
+                category: "Technology",
+                distance: 25,
+            },
+            {
+                title: "Book 40+ Appointments Per Month Using AI and Automation",
+                description: "New Jersey Business Network",
+                date: new Date(2025, 2, 16, 14),
+                image: "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "online",
+                category: "Technology",
+                distance: 10,
+            },
+            {
+                title: "Dump writing group weekly meetup",
+                description: "Dump writing group",
+                date: new Date(2025, 2, 13, 11),
+                image: "https://plus.unsplash.com/premium_photo-1678453146992-b80d66df9152?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "online",
+                attendees: 77,
+                category: "Business",
+                distance: 100,
+            },
+            {
+                title: "Over 40s, 50s, & 60s Senior Singles Chat, Meet & Dating Community",
+                description: "Over 40s, 50s, 60s Singles Chat, Meet & Dating Community",
+                date: new Date(2025, 2, 14, 11),
+                image: "https://plus.unsplash.com/premium_photo-1706005542509-a460d6efecb0?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "online",
+                attendees: 140,
+                category: "Social Activities",
+                distance: 75,
+            },
+            {
+                title: "All Nations - Manhattan Missions Church Bible Study",
+                description: "Manhattan Bible Study Meetup Group",
+                date: new Date(2025, 2, 14, 11),
+                image: "https://plus.unsplash.com/premium_photo-1679488248784-65a638a3d3fc?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                type: "offline",
+                category: "Health and Wellbeing",
+                distance: 15,
+            },
+
+        ];
+
+        function filterEvents(events, filters) {
+            return events.filter(event => { // Проходим по каждому событию и проверяем фильтры
+                if (filters.dateFrom && filters.dateTo) { // Если заданы начальная и конечная даты
+                    if (event.date < filters.dateFrom || event.date > filters.dateTo) { // Если дата события вне диапазона
+                        return false; // Исключаем событие
+                    }
+                }
+                if (filters.type && event.type !== filters.type) { // Если задан тип и он не совпадает
+                    return false; // Исключаем событие
+                }
+                if (filters.type === "online") { // Если тип "online"
+                    filters.distance = "any distance"; // Игнорируем фильтр расстояния
+                }
+                if (filters.distance !== "any distance" && event.distance !== "online") { // Если указано расстояние и событие не онлайн
+                    if (filters.distance && event.distance > filters.distance) { // Если расстояние события больше указанного
+                        return false; // Исключаем событие
+                    }
+                }
+                if (filters.category && event.category !== filters.category) { // Если указана категория и она не совпадает
+                    return false; // Исключаем событие
+                }
+                return true; // Если все условия выполнены, событие проходит фильтрацию
+            });
+        }
+
+        function applyFilters() {
+            const filters = { // Создаем объект с фильтрами, заполняя его из формы
+                dateFrom: document.getElementById('dateFrom').value ? new Date(document.getElementById('dateFrom').value) : null, // Преобразуем дату в объект Date
+                dateTo: document.getElementById('dateTo').value ? new Date(document.getElementById('dateTo').value) : null, // Преобразуем дату в объект Date
+                type: document.getElementById('type').value, // Получаем тип события
+                distance: document.getElementById('distance').value ? parseInt(document.getElementById('distance').value) : "any distance", // Получаем расстояние (число или "any distance")
+                category: document.getElementById('category').value // Получаем категорию события
+            };
+
+            const filteredEvents = filterEvents(eventsStore, filters); // Фильтруем события
+            displayEvents(filteredEvents); // Отображаем отфильтрованные события
+        }
+
+
+        function displayEvents(events) {
+            const eventList = document.getElementById("eventList");
+            eventList.innerHTML = "";
+            events.forEach(event => {
+                const eventDiv = document.createElement("div");
+                eventDiv.classList.add("event");
+                eventDiv.innerHTML = `
+                    <img src="${event.image}" alt="${event.title}">
+                    <h3>${event.title}</h3>
+                    <p><strong>Описание:</strong> ${event.description}</p>
+                    <p><strong>Дата:</strong> ${event.date.toLocaleDateString()} ${event.date.toLocaleTimeString()}</p>
+                    <p><strong>Тип:</strong> ${event.type}</p>
+                    <p><strong>Категория:</strong> ${event.category}</p>
+                    <p><strong>Дистанция:</strong> ${event.distance} km</p>
+                    <p><strong>Участников:</strong> ${event.attendees || 'Неизвестно'}</p>
+                `;
+                eventList.appendChild(eventDiv);
+            });
+        }
+    </script>
+</body>
+
+</html>
