@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильтр событий по дистанции</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .event-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .event-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .event-card h3 {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Выберите дистанцию</h2>
+    <select id="distance">
+        <option value="all">Все дистанции</option>
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="15">15 km</option>
+        <option value="25">25 km</option>
+        <option value="50">50 km</option>
+        <option value="75">75 km</option>
+        <option value="100">100 km</option>
+    </select>
+
+    <div class="event-container" id="event-list"></div>
+
+    <script>
+        const eventsStore = [
+            {
+                title: "INFJ Personality Type - Coffee Shop Meet & Greet",
+                description: "Being an INFJ",
+                date: new Date(2024, 2, 23, 15),
+                image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1037&auto=format&fit=crop",
+                type: "offline",
+                attendees: 99,
+                category: "Hobbies and Passions",
+                distance: 50,
+            },
+            {
+                title: "NYC AI Users - AI Tech Talks, Demo & Social",
+                description: "New York AI Users",
+                date: new Date(2024, 2, 23, 11, 30),
+                image: "https://images.unsplash.com/photo-1696258686454-60082b2c33e2?q=80&w=870&auto=format&fit=crop",
+                type: "offline",
+                attendees: 43,
+                category: "Technology",
+                distance: 25,
+            },
+            {
+                title: "Book 40+ Appointments Per Month Using AI and Automation",
+                description: "New Jersey Business Network",
+                date: new Date(2024, 2, 16, 14),
+                image: "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?q=80&w=1032&auto=format&fit=crop",
+                type: "online",
+                category: "Technology",
+                distance: 10,
+            },
+            {
+                title: "Dump writing group weekly meetup",
+                description: "Dump writing group",
+                date: new Date(2024, 2, 13, 11),
+                image: "https://plus.unsplash.com/premium_photo-1678453146992-b80d66df9152?q=80&w=870&auto=format&fit=crop",
+                type: "online",
+                attendees: 77,
+                category: "Business",
+                distance: 100,
+            },
+            {
+                title: "Over 40s, 50s, & 60s Senior Singles Chat, Meet & Dating",
+                description: "Singles Chat Community",
+                date: new Date(2024, 2, 14, 11),
+                image: "https://plus.unsplash.com/premium_photo-1706005542509-a460d6efecb0?q=80&w=870&auto=format&fit=crop",
+                type: "online",
+                attendees: 140,
+                category: "Social Activities",
+                distance: 75,
+            },
+            {
+                title: "All Nations - Manhattan Missions Church Bible Study",
+                description: "Manhattan Bible Study Meetup Group",
+                date: new Date(2024, 2, 14, 11),
+                image: "https://plus.unsplash.com/premium_photo-1679488248784-65a638a3d3fc?q=80&w=870&auto=format&fit=crop",
+                type: "offline",
+                category: "Health and Wellbeing",
+                distance: 15,
+            }
+        ];
+
+        const eventList = document.getElementById("event-list");
+        const distanceSelect = document.getElementById("distance");
+
+        function renderEvents(filteredEvents) {
+            eventList.innerHTML = "";
+            if (filteredEvents.length === 0) {
+                eventList.innerHTML = "<p>Нет событий для выбранной дистанции</p>";
+                return;
+            }
+            filteredEvents.forEach(event => {
+                const eventCard = document.createElement("div");
+                eventCard.classList.add("event-card");
+                eventCard.innerHTML = `
+                    <img src="${event.image}" alt="${event.title}">
+                    <h3>${event.title}</h3>
+                    <p><strong>Описание:</strong> ${event.description}</p>
+                    <p><strong>Дата:</strong> ${event.date.toLocaleDateString()} ${event.date.toLocaleTimeString()}</p>
+                    <p><strong>Тип:</strong> ${event.type}</p>
+                    <p><strong>Категория:</strong> ${event.category}</p>
+                    <p><strong>Дистанция:</strong> ${event.distance} km</p>
+                    <p><strong>Участников:</strong> ${event.attendees || 'Неизвестно'}</p>
+                `;
+                eventList.appendChild(eventCard);
+            });
+        }
+
+        function filterEvents() {
+            const selectedDistance = distanceSelect.value;
+            if (selectedDistance === "all") {
+                renderEvents(eventsStore);
+            } else {
+                const filteredEvents = eventsStore.filter(event => event.distance == selectedDistance);
+                renderEvents(filteredEvents);
+            }
+        }
+
+        distanceSelect.addEventListener("change", filterEvents);
+
+        renderEvents(eventsStore);
+
+        
+    </script>
+
+</body>
+
+</html>
