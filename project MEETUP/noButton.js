@@ -72,89 +72,90 @@ const eventsStore = [
 
 // Функция для заполнения фильтров на основе данных из eventsStore
 function populateFilters() {
-    // Получаем уникальные значения типов событий
     const types = [...new Set(eventsStore.map(event => event.type))];
-    // Получаем уникальные значения дистанций и сортируем их по возрастанию
     const distances = [...new Set(eventsStore.map(event => event.distance))].sort((a, b) => a - b);
-    // Получаем уникальные значения категорий
     const categories = [...new Set(eventsStore.map(event => event.category))];
 
-    // Находим элементы фильтров на странице
     const typeFilter = document.getElementById("typeFilter");
     const distanceFilter = document.getElementById("distanceFilter");
     const categoryFilter = document.getElementById("categoryFilter");
 
-    // Заполняем фильтр типов
     types.forEach(type => {
-        let option = new Option(type, type); // Создаем новый элемент option
-        typeFilter.add(option); // Добавляем option в выпадающий список
+        let option = new Option(type, type);
+        typeFilter.add(option);
     });
 
-    // Заполняем фильтр дистанций
     distances.forEach(distance => {
-        let option = new Option(distance + " km", distance); // Формируем надпись с расстоянием
-        distanceFilter.add(option); // Добавляем option в выпадающий список
+        let option = new Option(distance + " km", distance);
+        distanceFilter.add(option);
     });
 
-    // Заполняем фильтр категорий
     categories.forEach(category => {
-        let option = new Option(category, category); // Создаем новый option для категории
-        // categoryFilter.add(option); // Добавляем option в фильтр Если вы работаете с элементом select и хотите добавить новые опции, предпочтительнее использовать метод add().
+        let option = new Option(category, category);
         categoryFilter.appendChild(option);
     });
 }
 
 // Функция для фильтрации событий по заданным параметрам
 function filterEvents() {
-    // Получаем значения фильтров с страницы
     const dateFrom = new Date(document.getElementById("dateFrom").value);
     const dateTo = new Date(document.getElementById("dateTo").value);
     const type = document.getElementById("typeFilter").value;
     const distance = document.getElementById("distanceFilter").value;
     const category = document.getElementById("categoryFilter").value;
 
-    // Фильтруем события из eventsStore
     let filteredEvents = eventsStore.filter(event => {
-        let match = true; // Переменная для отслеживания совпадений
-
-        // Фильтр по дате "от"
+        let match = true;
+        
+        // Проверяем, что дата события не раньше заданной даты "от"
         if (dateFrom != "Invalid Date" && event.date < dateFrom) match = false;
-        // Фильтр по дате "до"
+    
+        // Проверяем, что дата события не позже заданной даты "до"
         if (dateTo != "Invalid Date" && event.date > dateTo) match = false;
-        // Фильтр по типу события
+    
+        // Проверяем, что тип события совпадает с выбранным типом
         if (type && event.type !== type) match = false;
-        // Фильтр по дистанции
+    
+        // Проверяем, что дистанция события совпадает с выбранной дистанцией
         if (distance && event.distance != distance) match = false;
-        // Фильтр по категории
+    
+        // Проверяем, что категория события совпадает с выбранной категорией
         if (category && event.category !== category) match = false;
-
-        return match; // Возвращаем результат совпадений
+    
+        return match; // Возвращаем true, если все фильтры прошли, и событие должно быть включено в результат
     });
 
-    // Отображаем отфильтрованные события
+    // let filteredEvents = eventsStore.filter(event => {
+    //     let match = true;
+
+    //     if (dateFrom != "Invalid Date" && event.date < dateFrom) match = false;
+    //     if (dateTo != "Invalid Date" && event.date > dateTo) match = false;
+    //     if (type && event.type !== type) match = false;
+    //     if (distance && event.distance != distance) match = false;
+    //     if (category && event.category !== category) match = false;
+
+    //     return match;
+    // });
+
     displayEvents(filteredEvents);
 }
 
 // Функция для отображения списка событий на странице
 function displayEvents(events) {
-    // Получаем контейнер для событий
     const container = document.getElementById("eventsContainer");
-    container.innerHTML = ""; // Очищаем контейнер перед добавлением новых событий
+    container.innerHTML = "";
 
-    // Если событий нет, показываем соответствующее сообщение
     if (events.length === 0) {
         container.innerHTML = "<p>No events found</p>";
-        return; // Прекращаем выполнение функции
+        return;
     }
 
-    // Перебираем события и отображаем каждое из них
     events.forEach(event => {
-        const eventDiv = document.createElement("div"); // Создаем блок для события
-        eventDiv.classList.add("event"); 
+        const eventDiv = document.createElement("div");
+        eventDiv.classList.add("event");
         eventDiv.innerHTML = `
             <div class="article">
               <div class="article__img"><img src="${event.image}" alt="${event.title}"></div>
-
               <div class="article__content">
                 <div class="article__date">${event.date.toLocaleDateString()} ${event.date.toLocaleTimeString()}</div>
                 <div class="article__title">${event.title}</div>
@@ -162,24 +163,18 @@ function displayEvents(events) {
                 <div class="article__details">${event.type}</div>
               </div>
             </div>
-                `;
-        container.appendChild(eventDiv); // Добавляем блок события в контейнер
+        `;
+        container.appendChild(eventDiv);
     });
 }
 
-// Добавляем обработчик события на изменение фильтра по типу
-document.getElementById("typeFilter").addEventListener("change", function () {
-    // Если выбран тип "online", отключаем фильтр по дистанции
-    if (this.value === "online") {
-        document.getElementById("distanceFilter").value = ""; // Сбрасываем значение
-        document.getElementById("distanceFilter").disabled = true; // Отключаем фильтр
-    } else {
-        // Если выбран другой тип, включаем фильтр по дистанции
-        document.getElementById("distanceFilter").disabled = false;
-    }
-});
+//////////////////////////Обработчики событий для фильтров
+document.getElementById("typeFilter").addEventListener("change", filterEvents);
+document.getElementById("distanceFilter").addEventListener("change", filterEvents);
+document.getElementById("categoryFilter").addEventListener("change", filterEvents);
+document.getElementById("dateFrom").addEventListener("change", filterEvents);
+document.getElementById("dateTo").addEventListener("change", filterEvents);
 
 // Инициализация фильтров и отображение всех событий при загрузке страницы
 populateFilters();
 displayEvents(eventsStore);
-
