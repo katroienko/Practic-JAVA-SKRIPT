@@ -99,8 +99,8 @@ function populateFilters() {
     // Заполняем фильтр категорий
     categories.forEach(category => {
         let option = new Option(category, category); // Создаем новый option для категории
-        // categoryFilter.add(option); // Добавляем option в фильтр Если вы работаете с элементом select и хотите добавить новые опции, предпочтительнее использовать метод add().
-        categoryFilter.appendChild(option);
+        categoryFilter.add(option); // Добавляем option в фильтр Если вы работаете с элементом select и хотите добавить новые опции, предпочтительнее использовать метод add().
+        // categoryFilter.appendChild(option);
     });
 }
 
